@@ -106,8 +106,22 @@ public class SimulatorController implements Initializable {
     
     @FXML
     public void onPaneClicked(MouseEvent e) {
+    	boolean intersected =false; // no to draw shape onto anther shape    
+    	for(int i=0; i<mCircles.size(); i++) {
+			Circle c = mCircles.get(i);
+			if( c.intersects(e.getSceneX(), e.getSceneY()-50, 1, 1)) {
+		        intersected=true;
+			}
+		}
+		for(int i=0; i<qRectangles.size(); i++) {
+			Rectangle r = qRectangles.get(i);
+			if( r.intersects(e.getSceneX(), e.getSceneY()-50, 1, 1)) {
+				intersected=true;
+			}
+		}
+    	if(!intersected) {
     	if(addQ) {
-    		Q q = new Q();
+			Q q = new Q();
     		qs.add(q);
     		Rectangle r = new Rectangle(e.getSceneX(), e.getSceneY()-50, 40, 30);
     		r.setFill(Color.rgb(251, 251, 1));
@@ -125,7 +139,7 @@ public class SimulatorController implements Initializable {
     			for(; i<mCircles.size(); i++) {
     				Circle c = mCircles.get(i);
     				if( c.intersects(x, y, 1, 1)) {
-    					if( ! q.getMachines().contains(ms.get(i)) && (ms.get(i).getNextQ() == null || ! ms.get(i).getNextQ().equals(q)) ) {
+    					if(!addQ && !addM && ! q.getMachines().contains(ms.get(i)) && (ms.get(i).getNextQ() == null || ! ms.get(i).getNextQ().equals(q)) ) {
 	    					q.addMachine(ms.get(i));
 	    					Arrow a = new Arrow(r.getX()+20, r.getY()+15, c.getCenterX(), c.getCenterY());
 	    					canvas.getChildren().add(a);
@@ -140,7 +154,7 @@ public class SimulatorController implements Initializable {
     			for(; i<mCircles.size(); i++) {
     				Circle c = mCircles.get(i);
     				if( c.intersects(x, y, 1, 1)) {
-    					if( ! q.getMachines().contains(ms.get(i)) && (ms.get(i).getNextQ() == null || ! ms.get(i).getNextQ().equals(q)) ) {
+    					if(!addQ && !addM &&  ! q.getMachines().contains(ms.get(i)) && (ms.get(i).getNextQ() == null || ! ms.get(i).getNextQ().equals(q)) ) {
 	    					q.addMachine(ms.get(i));
 	    					Arrow a = new Arrow(r.getX()+20, r.getY()+15, c.getCenterX(), c.getCenterY());
 	    					canvas.getChildren().add(a);
@@ -166,7 +180,7 @@ public class SimulatorController implements Initializable {
     			for(; i<qRectangles.size(); i++) {
     				Rectangle r = qRectangles.get(i);
     				if( r.intersects(x, y, 1, 1)) {
-    					if( m.getNextQ() == null && !qs.get(i).getMachines().contains(m)) {
+    					if(!addQ && !addM &&  m.getNextQ() == null && !qs.get(i).getMachines().contains(m)) {
 	    					m.setNextQ(qs.get(i));
 	    					Arrow a = new Arrow(c.getCenterX(), c.getCenterY(), r.getX()+20, r.getY()+15);
 	    					canvas.getChildren().add(a);
@@ -182,7 +196,7 @@ public class SimulatorController implements Initializable {
     			for(; i<qRectangles.size(); i++) {
     				Rectangle r = qRectangles.get(i);
     				if( r.intersects(x, y, 1, 1)) {
-    					if( m.getNextQ() == null && !qs.get(i).getMachines().contains(m)) {
+    					if(!addQ && !addM &&  m.getNextQ() == null && !qs.get(i).getMachines().contains(m)) {
 	    					m.setNextQ(qs.get(i));
 	    					Arrow a = new Arrow(c.getCenterX(), c.getCenterY(), r.getX()+20, r.getY()+15);
 	    					canvas.getChildren().add(a);
@@ -192,7 +206,7 @@ public class SimulatorController implements Initializable {
     		});
     	}
     }
-    
+    }
     @FXML
     public void closeClicked() {
         System.exit(0);
